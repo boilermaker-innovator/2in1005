@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Listings: Multiple Positions</title>
+    <style>
+        body, html { 
+            font-family: 'Arial', sans-serif; 
+            line-height: 1.6; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f8ff; 
+        }
+        .job-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+        .job-title {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        .job-location {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        .view-teaser-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .view-teaser-btn:hover {
+            background-color: #2980b9;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .gify-card { 
+            background-color: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            padding: 10px; 
+            width: 90%;
+            max-width: 400px; 
+            height: 400px;
+            margin: 10% auto; 
+            border: 2px solid #3498db;
+            display: flex;
+            flex-direction: column;
+        }
+        .header { 
+            display: flex; 
+            align-items: center; 
+            margin-bottom: 5px;
+        }
+        .logo { 
+            width: 30px; 
+            height: 30px; 
+            background-color: #3498db; 
+            border-radius: 50%; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 10px;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        .gify-card h1 { 
+            color: #2c3e50; 
+            font-size: 14px; 
+            margin: 0; 
+            flex-grow: 1;
+            line-height: 1.2;
+        }
+        .location { 
+            font-style: italic; 
+            font-size: 10px; 
+            margin-top: 2px;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            display: flex;
+        }
+        .tab button {
+            background-color: inherit;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: 0.3s;
+            font-size: 10px;
+            flex: 1;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        .tabcontent {
+            display: none;
+            animation: fadeEffect 1s;
+        }
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .gify-card h3 { 
+            color: #3498db; 
+            margin: 8px 0 4px 0; 
+            font-size: 12px; 
+        }
+        .gify-card p, .gify-card li { 
+            margin: 0 0 2px 0; 
+            font-size: 10px;
+        }
+        .gify-card ul, .gify-card ol { 
+            padding-left: 15px; 
+            margin: 0 0 4px 0;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+        .apply-button, .close-button { 
+            background-color: #2ecc71; 
+            color: white; 
+            border: none; 
+            padding: 6px 10px; 
+            border-radius: 15px; 
+            cursor: pointer; 
+            font-size: 12px; 
+            width: 48%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+        }
+        .close-button {
+            background-color: #e74c3c;
+        }
+        .apply-button:hover {
+            background-color: #27ae60;
+        }
+        .close-button:hover {
+            background-color: #c0392b;
+        }
+        .arrow-icon {
+            margin-left: 5px;
+            font-size: 14px;
+        }
+        .tab-toggle {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .tab-toggle label {
+            margin-left: 5px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="job-card">
+        <h2 class="job-title">Fitters, Boilermakers, Crane Op's & Riggers</h2>
+        <p class="job-location">📍 Perth WA (FIFO - DIDO - Shutdowns)</p>
+        <p>💰 <strong>Salary:</strong> <span class="highlight">$55 - $70 per hour</span></p>
+        <p>🏢 <strong>Company:</strong> HSS Recruitment</p>
+        <button class="view-teaser-btn" onclick="openJobTeaser(0)">View Job Teaser</button>
+    </div>
+
+    <div class="job-card">
+        <h2 class="job-title">LV Mechanics</h2>
+        <p class="job-location">📍 Western Australia</p>
+        <p>💰 <strong>Salary:</strong> <span class="highlight">$45 - $55 per hour</span></p>
+        <p>🏢 <strong>Company:</strong> 2XM Recruit</p>
+        <button class="view-teaser-btn" onclick="openJobTeaser(1)">View Job Teaser</button>
+    </div>
+
+    <div id="jobTeaserModal0" class="modal">
+        <div class="gify-card">
+            <div class="header">
+                <div class="logo">HSS</div>
+                <div>
+                    <h1>Fitters, Boilermakers, Crane Op's & Riggers</h1>
+                    <p class="location">📍 Perth WA (FIFO - DIDO - Shutdowns)</p>
+                </div>
+            </div>
+            
+            <div class="tab-toggle">
+                <input type="checkbox" id="tabToggle0" onchange="toggleTabs(0)">
+                <label for="tabToggle0">Tabs</label>
+            </div>
+
+            <div id="tabContainer0" style="display: none;">
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'Overview0', 0)" id="defaultOpen0">Overview</button>
+                    <button class="tablinks" onclick="openTab(event, 'Requirements0', 0)">Requirements</button>
+                    <button class="tablinks" onclick="openTab(event, 'HowToApply0', 0)">How to Apply</button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="Overview0" class="tabcontent">
+                    <h3>Quick Overview</h3>
+                    <p>💰 <strong>Salary:</strong> <span class="highlight">$55 - $70 per hour</span></p>
+                    <p>⏱️ <strong>Job Type:</strong> Casual/Vacation (FIFO, DIDO, Shutdowns)</p>
+                    <p>🏢 <strong>Company:</strong> HSS Recruitment</p>
+                    <p>📅 <strong>Posted:</strong> 4 days ago</p>
+
+                    <h3>Job Highlights</h3>
+                    <ul>
+                        <li>✈️ FIFO opportunities with major mining companies</li>
+                        <li>🏠 DIDO options available (e.g., Boddington, Daveyhurst)</li>
+                        <li>🔧 Various roles: Fitters, Boilermakers, Riggers & Crane Operators</li>
+                        <li>🚀 Streamlined onboarding process</li>
+                        <li>💼 Variety of shutdowns and rostered opportunities</li>
+                    </ul>
+                </div>
+
+                <div id="Requirements0" class="tabcontent">
+                    <h3>Qualifications & Requirements</h3>
+                    <p><strong>Desirable Tickets & Licenses:</strong></p>
+                    <ul>
+                        <li>🎓 Confined Spaces</li>
+                        <li>🔝 Working at Heights</li>
+                        <li>🧪 Gas Testing</li>
+                        <li>🔥 Basic Fire</li>
+                        <li>👮 Police Clearance (for Gold Mines)</li>
+                    </ul>
+                    <p><strong>Other Requirements:</strong></p>
+                    <ul>
+                        <li>🇦🇺 Australian Working Rights</li>
+                        <li>🛠️ Australian Trade Qualifications</li>
+                    </ul>
+                </div>
+
+                <div id="HowToApply0" class="tabcontent">
+                    <h3>Application Process</h3>
+                    <ol>
+                        <li>📝 Review the job requirements carefully</li>
+                        <li>🖥️ Click the "Apply Now" button below</li>
+                        <li>📄 Complete the online application form</li>
+                        <li>📎 Attach your updated resume and relevant certificates</li>
+                        <li>✉️ Submit your application</li>
+                    </ol>
+                    <p>💡 <strong>Tip:</strong> Highlight your relevant experience and qualifications in your application.</p>
+                    <p>⏳ <strong>Response Time:</strong> Our team typically responds within 5-7 business days.</p>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <a href="https://www.seek.com.au/job/77748446?type=standout&ref=search-standalone#sol=7366c1e3a19757782291d44455170242d7a51c7f" target="_blank" class="apply-button">Apply Now <span class="arrow-icon">➜</span></a>
+                <button class="close-button" onclick="closeJobTeaser(0)">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="jobTeaserModal1" class="modal">
+        <div class="gify-card">
+            <div class="header">
+                <div class="logo">2XM</div>
+                <div>
+                    <h1>LV Mechanics</h1>
+                    <p class="location">📍 Western Australia</p>
+                </div>
+            </div>
+            
+            <div class="tab-toggle">
+                <input type="checkbox" id="tabToggle1" onchange="toggleTabs(1)">
+                <label for="tabToggle1">Tabs</label>
+            </div>
+
+            <div id="tabContainer1" style="display: none;">
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'Overview1', 1)" id="defaultOpen1">Overview</button>
+                    <button class="tablinks" onclick="openTab(event, 'Requirements1', 1)">Requirements</button>
+                    <button class="tablinks" onclick="openTab(event, 'HowToApply1', 1)">How to Apply</button>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div id="Overview1" class="tabcontent">
+                    <h3>Quick Overview</h3>
+                    <p>💰 <strong>Salary:</strong> <span class="highlight">$45 - $55 per hour</span></p>
+                    <p>⏱️ <strong>Job Type:</strong> Permanent</p>
+                    <p>🏢 <strong>Company:</strong> 2XM Recruit</p>
+                    <p>📅 <strong>Posted:</strong> 13 August 2024</p>
+
+                    <h3>Job Highlights</h3>
+                    <ul>
+                        <li>🔧 Service and maintenance of mobile equipment</li>
+                        <li>🔍 Fault-finding and diagnostics</li>
+                        <li>🔩 Component change-outs and repairs</li>
+                        <li>🛠️ Opportunities for various mechanic levels</li>
+                        <li>💼 Ongoing positions with possibility of becoming permanent</li>
+                    </ul>
+                </div>
+
+                <div id="Requirements1" class="tabcontent">
+                    <h3>Qualifications & Requirements</h3>
+                    <ul>
+                        <li>🚗 Valid Driver's License</li>
+                        <li>🎓 Relevant accredited Trade Qualifications</li>
+                        <li>🚜 Experience with mobile plant or automotive equipment</li>
+                        <li>🏗️ Forklift license (Advantageous)</li>
+                        <li>⏱️ Ability to work unsupervised in a time-critical environment</li>
+                    </ul>
+                </div>
+
+                <div id="HowToApply1" class="tabcontent">
+                    <h3>What's in it for you?</h3>
+                    <ul>
+                        <li>💼 Ongoing positions with potential for permanency</li>
+                        <li>🌐 Opportunities with major national and international clients</li>
+                        <li>💰 Fantastic salary/pay rates</li>
